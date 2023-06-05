@@ -1,4 +1,4 @@
-# PeerTube plugin Creative Commons
+# EBU PeerTube plugin
 
 This plugin for the PeerTube platform enables the addition of EBU metadata. The metadata should be able to be added during the video upload and then be displayed below the video.
 
