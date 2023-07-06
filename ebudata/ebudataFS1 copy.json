@@ -1,0 +1,41 @@
+{
+  "title": {
+    "notes": "",
+    "title": {
+      "frontend": {
+        "name": "title",
+        "label": "Title",
+        "descriptionHTML": "Titel",
+        "type": "input",
+        "default": "",
+        "hidden": false,
+        "error": false
+      },
+      "metadata": {
+        "dateModified": "",
+        "publicationHistory": "",
+        "titleAssignedBy": "",
+        "dateAssigned": "",
+        "notes": ""
+      }
+    },
+    "alternativeTitle": {
+      "frontend": {
+        "name": "alternativeTitle",
+        "label": "alternativeTitle",
+        "descriptionHTML": "Untertitel",
+        "type": "input",
+        "default": "",
+        "hidden": false,
+        "error": false
+      },
+      "metadata": {
+        "dateModified": "",
+        "publicationHistory": "",
+        "titleAssignedBy": "",
+        "dateAssigned": "",
+        "notes": ""
+      }
+    }
+  }
+}
