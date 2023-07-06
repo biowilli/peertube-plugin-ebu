@@ -437,9 +437,11 @@ async function register({
             }
           );
           users.map((user) => {
+            console.log("2:,user");
+            console.log(user.username + ":",user);
             registerVideoField(
               {
-                name: "user" + user.userid,
+                name: "user" + "-" + user.id + "-" + user.username,
                 label: user.username,
                 type: "input-checkbox",
                 hidden: false,
@@ -470,7 +472,7 @@ async function register({
           users.map((user) => {
             registerVideoField(
               {
-                name: "user" + user.id,
+                name: "contributor"+ "-" + user.id + "-" + user.username,
                 label: user.username,
                 type: "input-checkbox",
                 hidden: false,
@@ -501,7 +503,7 @@ async function register({
           organizations.map((organisation) => {
             registerVideoField(
               {
-                name: "organization" + organisation.id,
+                name: "organization"+ "-" + organisation.id + "-" + organisation.name,
                 label: organisation.name,
                 type: "input-checkbox",
                 hidden: false,
@@ -653,8 +655,8 @@ async function register({
           );
           registerVideoField(
             {
-              name: "first issued",
-              label: "first issued",
+              name: "firstIssued",
+              label: "First issued",
               descriptionHTML: "First Issued",
               type: "input",
               default: "",
@@ -669,8 +671,8 @@ async function register({
 
           registerVideoField(
             {
-              name: "last issued",
-              label: "last issued",
+              name: "lastIssued",
+              label: "Last issued",
               descriptionHTML: "Last Issued",
               type: "input",
               default: "",
@@ -685,7 +687,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "date digitalised",
+              name: "dateDigitalised",
               label: "date digitalised",
               descriptionHTML: "Date digitalised",
               type: "input",
@@ -701,7 +703,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "video links",
+              name: "videoLinks",
               label: "video links",
               descriptionHTML: "Video Link(s)",
               type: "input",

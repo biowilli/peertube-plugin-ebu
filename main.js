@@ -253,8 +253,9 @@ async function register({
     handler: ({ video, body }) => {
       if (!body.pluginData) return;
 
-      console.log("video in");
+      console.log("convert to json");
       console.log(body.pluginData);
+      console.log(      "convertIntoJsonFormat");
       convertIntoJsonFormat(body.pluginData);
 
       Object.keys(body.pluginData).forEach(function (key) {
@@ -326,10 +327,18 @@ function convertIntoJsonFormat(data) {
     stageName: "",
   };
 
-  creator = [];
-  contributors = [];
+  const sortedKeys = filterKeysByPrefixAndValue(data);
+  console.log('User keys:', sortedKeys.userKeys);
+  console.log('Contributor keys:', sortedKeys.contributorKeys);
+  console.log('Organization keys:', sortedKeys.organizationKeys);
 
-  //push contact
+  const creatorResult = extractValues(sortedKeys.userKeys);
+  const contributorResult = extractValues(sortedKeys.contributorKeys);
+  const organizationResult = extractValues(sortedKeys.organizationKeys);
+
+  console.log('User Result:', creatorResult);
+  console.log('Contributor Result:', organizationResult);
+  console.log('Organization Result:', contributorResult);
 
   //TODO Publisher
   organisation = {
@@ -358,9 +367,57 @@ function convertIntoJsonFormat(data) {
 
   transformedData = {
     title: title,
+    creator: creatorResult,
+    contributor: contributorResult,
+    publisher: organizationResult,
   };
   console.log("v1_transformedData");
   console.log(transformedData);
+}
+
+function filterKeysByPrefixAndValue(obj) {
+  let userKeys = [];
+  let organizationKeys = [];
+  let contributorKeys = [];
+
+  for (const key in obj) {
+    if (obj[key] === 'true') {
+      if (key.startsWith('user')) {
+        userKeys.push(key);
+      } else if (key.startsWith('contributor')) {
+        contributorKeys.push(key);
+      } else if (key.startsWith('organization')) {
+        organizationKeys.push(key);
+      } 
+    }
+  }
+
+  return { userKeys, contributorKeys, organizationKeys };
+}
+
+function extractValues(keys) {
+  const result = [];
+
+  for (const key of keys) {
+    const id = extractId(key);
+    const name = extractName(key);
+
+    if (id !== null && name !== null) {
+      result.push({ id, name });
+    }
+  }
+
+  return result;
+}
+
+function extractId(key) {
+  const idMatch = key.match(/-(.+?)-/);
+  return idMatch ? idMatch[1] : null;
+}
+
+function extractName(key) {
+  const nameMatch = key.match(/-\s*([A-Za-z]+)$/);
+  return nameMatch ? nameMatch[1] : null;
 }
 
 module.exports = {
