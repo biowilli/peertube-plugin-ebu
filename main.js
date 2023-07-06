@@ -344,11 +344,116 @@ function convertIntoJsonFormat(data) {
     text: data.text,
   };
 
-  //TODO Dates     dates: data.dates
-  //TODO Video Information
-  //TODO Rights
-  //TODO Metadata provider
+  var dateModified = new Date();
+  dates = {
+      coverage: {
+        dateRecorded: data.dateRecorded,
+        recordingLocation: [],
+      },
+      issued: {
+        firstIssued: data.firstIssued,
+        lastIssued: data.lastIssued,
+      },
+      dateDigitalied: data.dateDigitalied,
+      videoLinks: data.videoLinks,
+      dateModified: dateModified,
+      archiveData: {
+        filesize: "selbst rauskriegen",
+        filename: data.filename
+      }
+  };
+
+  videoInformation = {
+    genre: data.genre,
+    targetGroup: data.targetGroup,
+    showType: {
+      series: data.series,
+      type: data.type
+    },
+    parts: data.parts,
+    version: data.version,
+    category: "channelNamen",
+    rating: {
+      ratingValue: data.rating,
+      ratingScaleMaxValue: "idk",
+      ratingScaleMinValue: "idk",
+      notes: data.notes
+    }
+};
+  //TODO Rights ???
+  rights = {
+    
+  };
+  //TODO Metadata provider ??
+  metadDataProvider = {
+    organisation: "",
+    organizationDepartment: "",
+    role: "",
+    user: "",
+  };
   //TODO Technical data
+  technicalData = {
+    videoFormat: {
+      videoFormatID: "idk",
+      videoFormatName: "idk",
+      videoFormatDefinition: "idk",
+      regioDelimX: "idk",
+      regioDelimY: "idk",
+      aspectRatio: "idk",
+      width: "idk in px",
+      height: "idk in px",
+      videoEncoding: "idk",
+      videoTrack: {
+        id: "",
+        name: ""
+      } 
+    },
+    audioFormat: {
+      audioFormatID: "idk",
+      audioFormatName: "idk",
+      audioFormatDefinition: "idk",
+      audioEncoding: "idk",
+      audioConfiguration: "idk",
+      audioTrack: {
+        id: "",
+        name: "",
+        language: "",
+      },
+    },  
+    imageFormat: {
+      imageFormatID: "idk",
+      imageFormatName: "idk",
+      imageFormatDefinition: "idk",
+      regioDelimX: "idk",
+      regioDelimY: "idk",
+      width: "idk in px",
+      height: "idk in px",
+      orientation: "",
+      imageEncoding: "idk",
+    },
+    signingFormat: {
+      trackID: "idk",
+      trackName: "idk",
+      language: "idk",
+      signingSourceURI: "idk",
+      signingFormatID: "idk",
+      signingFormatName: "idk",
+      signingFomratDefinition: "idk",
+    }, 
+    containerFormat:  "idk",
+    dataFormat: "idk ... noch viel mehr...",
+    duration: {
+      start: "",
+      end: "",
+      duration: "",
+    },
+    filesize: "",
+    filename: "",
+    locator: "idk",
+    documentFormat: "idk ... noch viel mehr...",
+    medium: "",
+    mimeType: "",
+  }
 
   transformedData = {
     title: title,
@@ -356,9 +461,14 @@ function convertIntoJsonFormat(data) {
     contributor: contributorResult,
     publisher: organizationResult,
     description: description,
+    dates: dates,
+    videoInformation: videoInformation,
+    rights: rights,
+    metadDataProvider: metadDataProvider, 
+    technicalData: technicalData,
   };
 
-  console.log("v1_transformedData");
+  console.log("v2_transformedData");
   console.log(transformedData);
 }
 
