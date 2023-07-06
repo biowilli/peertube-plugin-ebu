@@ -318,14 +318,7 @@ function convertIntoJsonFormat(data) {
     descriptiveTitle: data.descriptiveTitle,
   };
 
-  //TODO multiple Creators and multiple Contributor
-  contact = {
-    id: "",
-    firstname: "",
-    lastname: "",
-    webadress: "",
-    stageName: "",
-  };
+  //TODO check again which data types have to be added
 
   const sortedKeys = filterKeysByPrefixAndValue(data);
   console.log('User keys:', sortedKeys.userKeys);
@@ -339,27 +332,19 @@ function convertIntoJsonFormat(data) {
   console.log('User Result:', creatorResult);
   console.log('Contributor Result:', organizationResult);
   console.log('Organization Result:', contributorResult);
-
-  //TODO Publisher
-  organisation = {
-    id: "",
-    name: "",
-  };
-
-  publisher = [];
-  //push organisation
-
-  //TODO Description
-  //TODO multiple Tags
-  tags = [];
-  //push tags
+  
+  var tagResult = [];
+  var tagResult = data.tags.split(",").map(function(tag) {
+    return tag.trim();
+  });
+  
   description = {
-    tags: tags,
+    tags: tagResult,
     subject: data.subject,
     text: data.text,
   };
 
-  //TODO Dates
+  //TODO Dates     dates: data.dates
   //TODO Video Information
   //TODO Rights
   //TODO Metadata provider
@@ -370,7 +355,9 @@ function convertIntoJsonFormat(data) {
     creator: creatorResult,
     contributor: contributorResult,
     publisher: organizationResult,
+    description: description,
   };
+
   console.log("v1_transformedData");
   console.log(transformedData);
 }
