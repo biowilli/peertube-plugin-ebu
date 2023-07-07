@@ -26,7 +26,7 @@
   "css": [
     "assets/style.css"
   ],
-  "devDependencies": {
+  "peerDependencies": {
     "@peertube/peertube-types": "^5.1.0",
     "@purtuga/esm-webpack-plugin": "^1.1.1",
     "webpack": "^4.41.2",
@@ -58,5 +58,8 @@
     "images": "public/images",
     "ebudata": "ebudata"
   },
-  "translations": {}
+  "translations": {},
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
 }
