@@ -1,7 +1,4 @@
-//TODO const { v4: uuidv4 } = require('uuid');
-//TODO console.log("uuidv4():", uuidv4());
-
-//Löschen aus den bisherigen Elementen
+const { v4: uuidv4 } = require('uuid');
 
 const initGenreController = (router, storageManager) => {
   router.get("/genre/all", async (req, res) => {
@@ -22,26 +19,19 @@ const initGenreController = (router, storageManager) => {
     try {
       var existingGenre = await storageManager.getData("genre");
       var genrename = await req.body.name;
+      var newData = {
+        id: uuidv4(),
+        name: genrename,
+      };
       if (existingGenre == undefined) {
-        var newData = {
-          id: 0,
-          name: genrename,
-        };
         await storageManager.storeData("genre", {
-          counter: 0,
           data: [newData],
         });
 
         res.send(newData);
         return;
       }
-      var newId = existingGenre.counter + 1;
-      var newData = {
-        id: newId,
-        name: genrename,
-      };
 
-      existingGenre.counter = newId;
       existingGenre.data.push(newData);
       await storageManager.storeData("genre", existingGenre);
 
@@ -100,29 +90,24 @@ const initOrganizationController = (router, storageManager) => {
     });
 
   router.post("/organization/create", async (req, res) => {
+    
     try {
       var existingOrganizations = await storageManager.getData("organizations");
+      console.log(req.body);
       var organizationname = await req.body.name;
+      var newData = {
+        id: uuidv4(),
+        name: organizationname,
+      };  
       if (existingOrganizations == undefined) {
-        var newData = {
-          id: 0,
-          name: organizationname,
-        };
         await storageManager.storeData("organizations", {
-          counter: 0,
           data: [newData],
         });
 
         res.send(newData);
         return;
       }
-      var newId = existingOrganizations.counter + 1;
-      var newData = {
-        id: newId,
-        name: organizationname,
-      };
 
-      existingOrganizations.counter = newId;
       existingOrganizations.data.push(newData);
       await storageManager.storeData("organizations", existingOrganizations);
 
