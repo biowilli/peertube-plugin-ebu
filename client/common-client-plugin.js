@@ -361,8 +361,7 @@ async function register({
             // type: 'main' | 'plugin-settings'
             tab: "plugin-settings",
           };
-
-          //Headline Title
+          
           registerVideoField(
             {
               type: "html",
@@ -376,9 +375,10 @@ async function register({
               ...videoFormOptions,
             }
           );
+
           registerVideoField(
             {
-              name: "title",
+              name: "title.title",
               label: "Title",
               descriptionHTML: "Title",
               type: "input",
@@ -393,7 +393,22 @@ async function register({
           );
           registerVideoField(
             {
-              name: "descriptiveTitle",
+              name: "title.title.note",
+              label: "Note",
+              descriptionHTML: "Note",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          registerVideoField(
+            {
+              name: "title.descriptiveTitle",
               label: "Descriptive Title",
               descriptionHTML: "Beschreibender Titel",
               type: "input",
@@ -408,7 +423,22 @@ async function register({
           );
           registerVideoField(
             {
-              name: "discTitle",
+              name: "title.descriptiveTitle.note",
+              label: "Note",
+              descriptionHTML: "Note",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          registerVideoField(
+            {
+              name: "title.discTitle",
               label: "Alternative Title",
               descriptionHTML: "Untertitel",
               type: "input",
@@ -421,7 +451,36 @@ async function register({
               ...videoFormOptions,
             }
           );
-
+          registerVideoField(
+            {
+              name: "title.discTitle.note",
+              label: "Note",
+              descriptionHTML: "Note",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          registerVideoField(
+            {
+              name: "title.note",
+              label: "Note",
+              descriptionHTML: "Note",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
           //Headline Creator
           registerVideoField(
             {
@@ -533,7 +592,7 @@ async function register({
           );
           registerVideoField(
             {
-              name: "tags",
+              name: "description.tags",
               label: "Tags",
               descriptionHTML: "Tags mit ',' trennen",
               type: "input",
@@ -548,7 +607,7 @@ async function register({
           );
           registerVideoField(
             {
-              name: "subject",
+              name: "description.subject",
               label: "Subject",
               descriptionHTML: "Betreff",
               type: "input",
@@ -563,7 +622,7 @@ async function register({
           );
           registerVideoField(
             {
-              name: "text",
+              name: "description.text",
               label: "text",
               descriptionHTML: "Text",
               type: "input",
@@ -607,7 +666,7 @@ async function register({
           );
           registerVideoField(
             {
-              name: "daterecorded",
+              name: "dates.coverage.daterecorded",
               label: "daterecorded",
               descriptionHTML: "Date recorded",
               type: "input",
@@ -625,7 +684,7 @@ async function register({
           organizations.map((organisation, index) => {
             registerVideoField(
               {
-                name: "location" + index,
+                name: "dates.coverage.recordingLocation" + index,
                 label: "location" + index,
                 type: "input-checkbox",
                 hidden: false,
@@ -653,9 +712,10 @@ async function register({
               ...videoFormOptions,
             }
           );
+          //TODO dates.coverage.recordingLocation
           registerVideoField(
             {
-              name: "firstIssued",
+              name: "dates.issued.firstIssued",
               label: "First issued",
               descriptionHTML: "First Issued",
               type: "input",
@@ -671,7 +731,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "lastIssued",
+              name: "dates.issued.lastIssued",
               label: "Last issued",
               descriptionHTML: "Last Issued",
               type: "input",
@@ -687,7 +747,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "dateDigitalised",
+              name: "dates.dateDigitalised",
               label: "date digitalised",
               descriptionHTML: "Date digitalised",
               type: "input",
@@ -703,7 +763,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "videoLinks",
+              name: "dates.videoLinks",
               label: "video links",
               descriptionHTML: "Video Link(s)",
               type: "input",
@@ -717,9 +777,135 @@ async function register({
             }
           );
 
+          //Headline Publication History
           registerVideoField(
             {
-              name: "filename",
+              type: "html",
+              html: "<h2>publicationHistory</h2>",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.publicationHistory",
+              label: "publicationHistory",
+              descriptionHTML: "Publication History setzen, also eine neue Version der Daten abspeichern",
+              type: "input-checkbox",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.publicationHistory.firstPublicationDate",
+              label: "dates.publicationHistory.firstPublicationDate",
+              descriptionHTML: "PfirstPublicationDate",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.publicationHistory.firstPublicationTime",
+              label: "dates.publicationHistory.firstPublicationTime",
+              descriptionHTML: "firstPublicationTime",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.publicationHistory.firstPublicationChannel",
+              label: "dates.publicationHistory.firstPublicationChannel",
+              descriptionHTML: "firstPublicationChannel",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.publicationHistory.repeatChannel",
+              label: "dates.publicationHistory.repeatChannel",
+              descriptionHTML: "repeatChannel",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          
+          //Headline Issued
+          registerVideoField(
+            {
+              type: "html",
+              html: "<h2>Archive</h2>",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          
+          registerVideoField(
+            {
+              name: "dates.archiveData.filesize",
+              label: "filesize",
+              descriptionHTML: "filesize",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.archiveData.filename",
               label: "filename",
               descriptionHTML: "Filename",
               type: "input",
@@ -733,6 +919,38 @@ async function register({
             }
           );
 
+          registerVideoField(
+            {
+              name: "dates.archiveData.archiveLocation",
+              label: "archiveLocation",
+              descriptionHTML: "archiveLocation",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "dates.archiveData.archiveFilePath",
+              label: "archiveFilePath",
+              descriptionHTML: "archiveFilePath",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+          
           //Headline Video Information
           registerVideoField(
             {
@@ -750,7 +968,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "genre",
+              name: "videoInformation.genre",
               label: "genre",
               descriptionHTML: "Genre",
               type: "input",
@@ -766,8 +984,8 @@ async function register({
 
           registerVideoField(
             {
-              name: "targetgroup",
-              label: "targetgroup",
+              name: "videoInformation.targetgroup",
+              label: "videoInformation.targetgroup",
               descriptionHTML: "Zielgruppe",
               type: "input",
               default: "",
@@ -780,7 +998,7 @@ async function register({
             }
           );
 
-          //Headline Issued
+          //Headline ShowType
           registerVideoField(
             {
               type: "html",
@@ -797,7 +1015,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "series",
+              name: "videoInformation.showType.series",
               label: "series",
               descriptionHTML: "Series",
               type: "select",
@@ -818,12 +1036,193 @@ async function register({
 
           registerVideoField(
             {
-              name: "genre",
+              name: "videoInformation.showType.type",
               label: "genre",
               descriptionHTML: "genre",
               type: "select",
               options: genreOptions,
 
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.parts",
+              label: "Parts",
+              descriptionHTML: "Parts",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.version",
+              label: "Version",
+              descriptionHTML: "Version",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.language",
+              label: "Language",
+              descriptionHTML: "Language",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.relation",
+              label: "Relation",
+              descriptionHTML: "Relation",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.source",
+              label: "Source",
+              descriptionHTML: "Source",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.category",
+              label: "category",
+              descriptionHTML: "category",
+              type: "select",
+              options: [
+                { label: "Season", value: "season" },
+                { label: "Episode", value: "episode" },
+              ],
+
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          //Headline Publication History
+          registerVideoField(
+            {
+              type: "html",
+              html: "<h2>Rating</h2>",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+
+          registerVideoField(
+            {
+              name: "videoInformation.rating.ratingValue",
+              label: "ratingValue",
+              descriptionHTML: "ratingValue",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.rating.ratingScaleMaxValue",
+              label: "ratingValue",
+              descriptionHTML: "ratingValue",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.rating.ratingScaleMinValue",
+              label: "ratingScaleMinValue",
+              descriptionHTML: "ratingScaleMinValue",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "videoInformation.rating.notes",
+              label: "Notes",
+              descriptionHTML: "Notes",
+              type: "input",
               default: "",
               hidden: false,
               error: false,
@@ -879,7 +1278,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "startDate",
+              name: "rights.cobyright.coverage.startDate",
               label: "startDate",
               descriptionHTML: "Start Datum",
               type: "input",
@@ -895,7 +1294,7 @@ async function register({
 
           registerVideoField(
             {
-              name: "endDate",
+              name: "rights.cobyright.coverage.endDate",
               label: "endDate",
               descriptionHTML: "End Datum",
               type: "input",
@@ -911,7 +1310,7 @@ async function register({
           //TODO Locations
           registerVideoField(
             {
-              name: "locations",
+              name: "rights.cobyright.coverage.locations",
               label: "locations",
               descriptionHTML: "locations",
               type: "input",
@@ -939,10 +1338,189 @@ async function register({
             }
           );
 
+          //TODO Organistations for Rights
+
+          registerVideoField(
+            {
+              name: "rights.cobyright.explotationIssues",
+              label: "explotationIssues",
+              descriptionHTML: "explotationIssues",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.cobyright.disclaimer",
+              label: "disclaimer",
+              descriptionHTML: "disclaimer",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+
+          registerVideoField(
+            {
+              name: "rights.cobyright.rightClearanceFlag",
+              label: "Right Clearance Flag?",
+              descriptionHTML: "disclaimer",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.cobyright.rightId",
+              label: "Right ID?",
+              descriptionHTML: "rightId",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
           registerVideoField(
             {
               type: "html",
               html: "<h3>usage rights</h3>",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.coverage",
+              label: "Coverage",
+              descriptionHTML: "Coverage",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.coverage",
+              label: "Coverage",
+              descriptionHTML: "Coverage",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              type: "html",
+              html: "<h4>Right Holder</h4>",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          //TODO Organistations for Rights
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.explotationIssues",
+              label: "explotationIssues",
+              descriptionHTML: "explotationIssues",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.disclaimer",
+              label: "disclaimer",
+              descriptionHTML: "disclaimer",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.rightClearanceFlag",
+              label: "Right Clearance Flag?",
+              descriptionHTML: "disclaimer",
+              type: "input",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+
+          registerVideoField(
+            {
+              name: "rights.usageRights.rightId",
+              label: "Right ID?",
+              descriptionHTML: "rightId",
+              type: "input",
               default: "",
               hidden: false,
               error: false,
@@ -968,19 +1546,7 @@ async function register({
             }
           );
 
-          registerVideoField(
-            {
-              type: "html",
-              html: "<h3>Show Type</h3>",
-              default: "",
-              hidden: false,
-              error: false,
-            },
-            {
-              type,
-              ...videoFormOptions,
-            }
-          );
+          //TODO Metadata Provider
 
           //Headline Technical data
           registerVideoField(
@@ -996,6 +1562,8 @@ async function register({
               ...videoFormOptions,
             }
           );
+
+            //TODO Technical Data extract
 
           registerVideoField(
             {

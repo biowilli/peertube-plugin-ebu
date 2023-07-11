@@ -96,18 +96,11 @@ async function register({
     target: "action:api.video.updated",
     handler: ({ video, body }) => {
       if (!body.pluginData) return;
-
-      console.log("convert to json");
       console.log(body.pluginData);
-      console.log("convertIntoJsonFormat");
-      convertIntoJsonFormat(body.pluginData);
+      console.log("unflattenJSON");
 
-      Object.keys(body.pluginData).forEach(function (key) {
-        const value = body.pluginData[key];
-        if (!value) return;
-        storageManager.storeData(key + "-" + video.id, value);
-      });
-    },
+      storageManager.storeData("metadata-" + video.id, unflattenJSON(body.pluginData));
+    }
   });
 
   // Add your custom value to the video, so the client autofill your field using the previously stored value
@@ -116,40 +109,32 @@ async function register({
     handler: async (video) => {
       if (!video) return video;
       if (!video.pluginData) video.pluginData = {};
-      console.log("video out");
-      console.log(video);
-      const promises = ebuData.map(async (ebuField) => {
-        var storedData = await storageManager.getData(
-          ebuField + "-" + video.id
-        );
+      var storedData = await storageManager.getData(
+        "metadata-" + video.id
+      );
 
-        if (ebuField == "title") {
-          video.pluginData[ebuField] = video.dataValues.name;
-          return;
-        }
+/* 
+      if (ebuField == "title") {
+        video.pluginData[ebuField] = video.dataValues.name;
+        return;
+      }
 
-        if (ebuField == "duration") {
-          video.pluginData[ebuField] = video.dataValues.duration;
-          return;
-        }
+      if (ebuField == "duration") {
+        video.pluginData[ebuField] = video.dataValues.duration;
+        return;
+      } */
 
-        video.pluginData[ebuField] = storedData;
-      });
-
-      await Promise.all(promises);
-
-      const sortedPluginData = {};
-      ebuData.forEach((ebuField) => {
-        sortedPluginData[ebuField] = video.pluginData[ebuField];
-      });
-
-      video.pluginData = sortedPluginData;
+      var flattedData = flattenJSON(storedData)
+      console.log(flattedData);
+      
+      video.pluginData = flattedData;
+      
       return video;
     },
   });
 }
 
-function convertIntoJsonFormat(data) {
+function getNestedArray(data) {
   // Konvertiere das Objekt in ein JSON-Format
   const json = JSON.stringify(data);
   console.log(json);
@@ -312,8 +297,12 @@ function convertIntoJsonFormat(data) {
     technicalData: technicalData,
   };
 
-  console.log("v2_transformedData");
+  console.log("v5_transformedData");
   console.log(transformedData);
+  console.log("v5_flattedData");
+  console.log(flattenJSON(transformedData));
+
+  return transformedData;
 }
 
 function filterKeysByPrefixAndValue(obj) {
@@ -359,6 +348,57 @@ function extractId(key) {
 function extractName(key) {
   const nameMatch = key.match(/-\s*([A-Za-z]+)$/);
   return nameMatch ? nameMatch[1] : null;
+}
+
+// Umwandlung in eindimensionales JSON
+function flattenJSON(obj, prefix = '') {
+  console.log("unflattenJSON in flattenJSON", flatJson);
+  let result = {};
+
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      let newKey = prefix ? `${prefix}.${key}` : key;
+
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        let flattenedObj = flattenJSON(obj[key], newKey);
+        result = { ...result, ...flattenedObj };
+      } else {
+        result[newKey] = obj[key];
+      }
+    }
+  }
+  console.log("result flattenJSON in flattenJSON", flatJson);
+  return result;
+}
+
+// Umwandlung in nested JSON
+function unflattenJSON(flatJson) {
+  console.log("flattenJSON in unflattenJSON", flatJson);
+  const nestedJson = {};
+
+  for (const key in flatJson) {
+    if (key.includes(".")) {
+      const nestedKeys = key.split(".");
+      let currentNestedJson = nestedJson;
+
+      for (let i = 0; i < nestedKeys.length - 1; i++) {
+        const nestedKey = nestedKeys[i];
+
+        if (!currentNestedJson[nestedKey]) {
+          currentNestedJson[nestedKey] = {};
+        }
+
+        currentNestedJson = currentNestedJson[nestedKey];
+      }
+
+      currentNestedJson[nestedKeys[nestedKeys.length - 1]] =
+        flatJson[key] !== undefined ? flatJson[key] : "";
+    } else {
+      nestedJson[key] = flatJson[key] !== undefined ? flatJson[key] : "";
+    }
+  }
+  console.log("result flattenJSON in unflattenJSON", nestedJson);
+  return nestedJson;
 }
 
 module.exports = {
