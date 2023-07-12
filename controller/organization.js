@@ -1,9 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
 
-const initOrganizationController = (router, storageManager) => {
-  router.get("/organization/all", async (req, res) => {
+const initGenreController = (router, storageManager) => {
+  router.get("/genre/all", async (req, res) => {
       try {
-        var storedData = await storageManager.getData("organizations");
+        var storedData = await storageManager.getData("genre");
         if (storedData == null) {
           res.send({});
           return;
@@ -15,21 +15,16 @@ const initOrganizationController = (router, storageManager) => {
       }
     });
 
-  router.post("/organization/create", async (req, res) => {
-    
+  router.post("/genre/create", async (req, res) => {
     try {
-      var existingOrganizations = await storageManager.getData("organizations");
-      console.log("existingOrganizations");
-      console.log(existingOrganizations);
-      console.log("req.body");
-      console.log(req.body);
-      var organizationname = await req.body.name;
+      var existingGenre = await storageManager.getData("genre");
+      var genrename = await req.body.name;
       var newData = {
         id: uuidv4(),
-        name: organizationname,
-      };  
-      if (existingOrganizations == undefined) {
-        await storageManager.storeData("organizations", {
+        name: genrename,
+      };
+      if (existingGenre == undefined) {
+        await storageManager.storeData("genre", {
           data: [newData],
         });
 
@@ -37,8 +32,8 @@ const initOrganizationController = (router, storageManager) => {
         return;
       }
 
-      existingOrganizations.data.push(newData);
-      await storageManager.storeData("organizations", existingOrganizations);
+      existingGenre.data.push(newData);
+      await storageManager.storeData("genre", existingGenre);
 
       res.send(newData);
     } catch (error) {
@@ -47,32 +42,30 @@ const initOrganizationController = (router, storageManager) => {
     }
   });
 
-  router.delete("/organization/delete/:id", async (req, res) => {
+  router.delete("/genre/delete/:id", async (req, res) => {
     try {
-      var existingOrganizations = await storageManager.getData("organizations");
-      var organizationId = req.params.id;
+      var existingGenre = await storageManager.getData("genre");
+      var genreId = req.params.id;
 
-      if (existingOrganizations == undefined) {
+      if (existingGenre == undefined) {
         res
           .status(404)
-          .json({ success: false, message: "Organisation nicht gefunden." });
+          .json({ success: false, message: "Genre nicht gefunden." });
         return;
       }
 
-      var organizationIndex = existingOrganizations.data.findIndex(
-        (org) => org.id == organizationId
-      );
-      if (organizationIndex !== -1) {
-        existingOrganizations.data.splice(organizationIndex, 1);
-        await storageManager.storeData("organizations", existingOrganizations);
+      var genreIndex = existingGenre.data.findIndex((org) => org.id == genreId);
+      if (genreIndex !== -1) {
+        existingGenre.data.splice(genreIndex, 1);
+        await storageManager.storeData("genre", existingGenre);
         res.status(200).json({
           success: true,
-          message: "Organisation erfolgreich gelöscht.",
+          message: "Genre erfolgreich gelöscht.",
         });
       } else {
         res
           .status(404)
-          .json({ success: false, message: "Organisation nicht gefunden." });
+          .json({ success: false, message: "Genre nicht gefunden." });
       }
     } catch (error) {
       console.error(error);
@@ -82,5 +75,6 @@ const initOrganizationController = (router, storageManager) => {
 }
 
 module.exports = {
-  initOrganizationController
+  initGenreController,
+  initOrganizationController,
 };
