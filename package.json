@@ -11,7 +11,31 @@
   "bugs": "https://github.com/biowilli/peertube-plugin-ebu/issues",
   "clientScripts": [
     {
-      "script": "client/common-client-plugin.js",
+      "script": "client/video-edit-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/router-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/creator-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/genre-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/organization-client-plugin.js",
       "scopes": [
         "common"
       ]
@@ -58,7 +82,10 @@
     "images": "public/images",
     "ebudata": "ebudata"
   },
-  "translations": {},
+  "translations": {
+    "en": "./languages/en.json",
+    "de": "./languages/de.json"
+  },
   "dependencies": {
     "uuid": "^9.0.0"
   }

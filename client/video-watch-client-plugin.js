@@ -2,13 +2,117 @@ function register({ registerHook, peertubeHelpers }) {
   registerHook({
     target: "action:video-watch.player.loaded",
     handler: ({ videojs, video, playlist }) => {
-      // Match all nodes
-      console.log("update view");
+      console.log("soll sotiert werden:");
       console.log(video.pluginData);
-
-      unflattenJSON(video.pluginData);
+      var sortedJson = sortedData(video.pluginData);
+      unflattenJSON(sortedJson);
     },
   });
+}
+
+function sortedData(pluginData){
+  const order = ['title', 'creator', 'contributor', 'publisher', 'description', 'dates', 'videoInformation', 'rights', 'metadataProvider', 'technicalData'];
+  let sortedJson = {};
+  order.forEach(key => {
+    Object.keys(pluginData).forEach(dataKey => {
+      if (dataKey.toLowerCase().startsWith(key.toLowerCase())) {
+        sortedJson[dataKey] = pluginData[dataKey];
+      }
+    });
+  });
+  return sortedJson;
+}
+
+function unflattenJSON(flatJson) {
+  const nestedJson = {};
+  
+  // Extract keys starting with prefixes and store them in a separate JSON
+  const contributorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "contributor");
+  const creatorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "user"); //TODO sollten creator sein
+  const organizationJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "organization");
+
+  console.log("contributorJson", contributorJson);
+  console.log("creatorJson", creatorJson);
+  console.log("organizationJson", organizationJson);
+  console.log("flatJson", flatJson);
+
+  const creatorResult = extractValues(creatorJson);
+  const contributorResult = extractValues(contributorJson);
+  const organizationResult = extractValues(organizationJson);
+
+  console.log('User Result:', creatorResult);
+  console.log('Contributor Result:', contributorResult);
+  console.log('Organization Result:', organizationResult );
+  
+  for (const key in flatJson) {
+
+    if (key.includes(".")) {
+      const nestedKeys = key.split(".");
+      let currentNestedJson = nestedJson;
+
+      for (let i = 0; i < nestedKeys.length - 1; i++) {
+        const nestedKey = nestedKeys[i];
+
+        if (!currentNestedJson[nestedKey]) {
+          currentNestedJson[nestedKey] = {};
+        }
+
+        currentNestedJson = currentNestedJson[nestedKey];
+      }
+
+      currentNestedJson[nestedKeys[nestedKeys.length - 1]] =
+        flatJson[key] !== undefined ? flatJson[key] : "-";
+    } else {
+      nestedJson[key] = flatJson[key] !== undefined ? flatJson[key] : "-";
+    }
+  }
+  console.log("nestedJson",nestedJson);
+  createHtml(nestedJson);
+}
+
+function extractKeysStartingWithPrefixesAndIsTrue(flatJson, prefix) {
+  const extractedJson = {};
+
+  for (const key in flatJson) {
+    if (key.startsWith(prefix)) {
+      if (flatJson[key] === "true"){
+        extractedJson[key] = flatJson[key];
+      }
+      delete flatJson[key];
+    }
+  }
+
+  return extractedJson;
+}
+
+function extractValues(keys) {
+  const result = [];
+  console.log(keys);
+  for (const key in keys) {
+    console.log(key);
+    if (keys.hasOwnProperty(key)) {
+      const id = extractId(key);
+      const name = extractName(key);
+
+      if (id !== null && name !== null) {
+        result.push({ id, name });
+      }
+    }
+  }
+
+  return result;
+}
+
+//TODO checken ob es passt, nochmal neu
+function extractId(key) {
+  const idParts = key.split("-");
+  const extractedId = idParts[1] + "-" + idParts[2] + "-" + idParts[3] + "-" + idParts[4] + "-" + idParts[5];
+  return extractedId;
+}
+
+function extractName(key) {
+  const nameParts = key.split("-");
+  return nameParts[nameParts.length - 1];
 }
 
 function createHtml(data, level = 1) {
@@ -34,58 +138,6 @@ function createHtml(data, level = 1) {
       createVideoInfo(key, value);
     }
   }
-}
-
-function extractKeysStartingWithPrefixes(flatJson, prefix) {
-  const extractedJson = {};
-
-  for (const key in flatJson) {
-    if (key.startsWith(prefix)) {
-      extractedJson[key] = flatJson[key];
-      delete flatJson[key];
-    }
-  }
-
-  return extractedJson;
-}
-
-
-function unflattenJSON(flatJson) {
-  const nestedJson = {};
-  
-  // Extract keys starting with prefixes and store them in a separate JSON
-  const contributorJson = extractKeysStartingWithPrefixes(flatJson, "contributor");
-  const creatorJson = extractKeysStartingWithPrefixes(flatJson, "creator");
-  const organizationJson = extractKeysStartingWithPrefixes(flatJson, "organization");
-
-  console.log(contributorJson);
-  console.log(creatorJson);
-  console.log(organizationJson);
-  
-  for (const key in flatJson) {
-
-    if (key.includes(".")) {
-      const nestedKeys = key.split(".");
-      let currentNestedJson = nestedJson;
-
-      for (let i = 0; i < nestedKeys.length - 1; i++) {
-        const nestedKey = nestedKeys[i];
-
-        if (!currentNestedJson[nestedKey]) {
-          currentNestedJson[nestedKey] = {};
-        }
-
-        currentNestedJson = currentNestedJson[nestedKey];
-      }
-
-      currentNestedJson[nestedKeys[nestedKeys.length - 1]] =
-        flatJson[key] !== undefined ? flatJson[key] : "-";
-    } else {
-      nestedJson[key] = flatJson[key] !== undefined ? flatJson[key] : "-";
-    }
-  }
-  
-  createHtml(nestedJson);
 }
 
 function createHeaderField(header, headerlevel) {
@@ -122,5 +174,9 @@ function createVideoInfo(label, value) {
   // Füge das neue Feld am Ende des my-video-attributes-Elements hinzu
   myVideoAttributes.appendChild(newField);
 }
+
+/* function translate(key){
+  return peertubeHelpers.translate(key);
+} */
 
 export { register };

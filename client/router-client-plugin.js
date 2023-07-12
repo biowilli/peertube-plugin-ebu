@@ -1,0 +1,42 @@
+async function register({
+  registerHook,
+}) {
+
+  registerHook({
+    target: "filter:left-menu.links.create.result",
+    handler: (links) => {
+      var newlinksection = {
+        key: "metadata",
+        title: "Metadata Plugin",
+        links: [
+          {
+            icon: "home",
+            path: "/p/metadata/creators",
+            shortLabel: "Creator",
+          },
+          {
+            icon: "home",
+            path: "/p/metadata/organizations",
+            shortLabel: "Organiztations",
+          },
+          {
+            icon: "home",
+            path: "/p/metadata/genres",
+            shortLabel: "Genre",
+          },
+          {
+            icon: "home",
+            path: "/admin/plugins/show/peertube-plugin-ebu",
+            shortLabel: "Settings",
+          },
+        ],
+      };
+
+      links.push(newlinksection);
+
+      return links;
+    },
+  });
+}
+
+export { register };

@@ -2,12 +2,14 @@ async function register({
   registerHook,
   storageManager,
   registerSetting,
-  baseStaticUrl,
   getRouter,
 }) {
-  
-  let { initGenreController, initOrganizationController } = require("./api.js")
+  var { initCreatorController }  = require("./controller/creator.js");
+  var { initGenreController } = require("./controller/genre.js");
+  var { initOrganizationController }  = require("./controller/organization.js");
+
   var router = getRouter();
+  initCreatorController(router, storageManager);
   initGenreController(router, storageManager);
   initOrganizationController(router, storageManager);
 
@@ -154,13 +156,7 @@ function getNestedArray(data) {
   console.log('Contributor keys:', sortedKeys.contributorKeys);
   console.log('Organization keys:', sortedKeys.organizationKeys);
 
-  const creatorResult = extractValues(sortedKeys.userKeys);
-  const contributorResult = extractValues(sortedKeys.contributorKeys);
-  const organizationResult = extractValues(sortedKeys.organizationKeys);
 
-  console.log('User Result:', creatorResult);
-  console.log('Contributor Result:', organizationResult);
-  console.log('Organization Result:', contributorResult);
   
   var tagResult = [];
   var tagResult = data.tags.split(",").map(function(tag) {
@@ -325,34 +321,9 @@ function filterKeysByPrefixAndValue(obj) {
   return { userKeys, contributorKeys, organizationKeys };
 }
 
-function extractValues(keys) {
-  const result = [];
-
-  for (const key of keys) {
-    const id = extractId(key);
-    const name = extractName(key);
-
-    if (id !== null && name !== null) {
-      result.push({ id, name });
-    }
-  }
-
-  return result;
-}
-
-function extractId(key) {
-  const idMatch = key.match(/-(.+?)-/);
-  return idMatch ? idMatch[1] : null;
-}
-
-function extractName(key) {
-  const nameMatch = key.match(/-\s*([A-Za-z]+)$/);
-  return nameMatch ? nameMatch[1] : null;
-}
 
 // Umwandlung in eindimensionales JSON
 function flattenJSON(obj, prefix = '') {
-  console.log("unflattenJSON in flattenJSON", flatJson);
   let result = {};
 
   for (let key in obj) {
@@ -367,7 +338,7 @@ function flattenJSON(obj, prefix = '') {
       }
     }
   }
-  console.log("result flattenJSON in flattenJSON", flatJson);
+  console.log("result flattenJSON in flattenJSON", result);
   return result;
 }
 
