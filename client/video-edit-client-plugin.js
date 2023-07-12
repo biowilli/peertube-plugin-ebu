@@ -8,6 +8,14 @@ async function register({
       headers: peertubeHelpers.getAuthHeader(),
     }).then((response) => response.json());
 
+    const fetchCreator = fetch(
+      peertubeHelpers.getBaseRouterRoute() + "/creator/all",
+      {
+        method: "GET",
+        headers: peertubeHelpers.getAuthHeader(),
+      }
+    ).then((response) => response.json());
+
     const fetchOrganizations = fetch(
       peertubeHelpers.getBaseRouterRoute() + "/organization/all",
       {
@@ -24,11 +32,13 @@ async function register({
       }
     ).then((response) => response.json());
 
-    Promise.all([fetchUsers, fetchOrganizations, fetchGenre]).then(
-      ([usersResponse, organizationsResponse, genreResponse]) => {
+    Promise.all([fetchCreator, fetchUsers, fetchOrganizations, fetchGenre]).then(
+      ([creatorResponse, usersResponse, organizationsResponse, genreResponse]) => {
+        const creators = creatorResponse.data;
         const users = usersResponse.data;
         const organizations = organizationsResponse.data;
         const genre = genreResponse.data;
+
         const genreOptions = genre.map((x) => {
           return { label: x.name, value: x.id };
         });
@@ -136,13 +146,28 @@ async function register({
               ...videoFormOptions,
             }
           );
-          users.map((user) => {
-            console.log("2:,user");
-            console.log(user.username + ":",user);
+          if (creators.length === 0) {
             registerVideoField(
               {
-                name: "user" + "-" + user.id + "-" + user.username,
-                label: user.username,
+                type: "html",
+                html: "Füge noch in Creator einen Creator hinzu",
+                default: "",
+                hidden: false,
+                error: false,
+              },
+              {
+                type,
+                ...videoFormOptions,
+              }
+            );
+          }
+          creators.map((creator) => {
+            console.log("creator");
+            console.log(creator + "1111:", creator);
+            registerVideoField(
+              {
+                name: "creator" + "-" + creator.id + "-" + creator.name,
+                label: creator.name,
                 type: "input-checkbox",
                 hidden: false,
                 error: false,
@@ -169,11 +194,26 @@ async function register({
               ...videoFormOptions,
             }
           );
-          users.map((user) => {
+          if (creators.length === 0) {
             registerVideoField(
               {
-                name: "contributor"+ "-" + user.id + "-" + user.username,
-                label: user.username,
+                type: "html",
+                html: "Füge noch in Creator einen Creator hinzu",
+                default: "",
+                hidden: false,
+                error: false,
+              },
+              {
+                type,
+                ...videoFormOptions,
+              }
+            );
+          }
+          creators.map((creator) => {
+            registerVideoField(
+              {
+                name: "contributor"+ "-" + creator.id + "-" + creator.name,
+                label: creator.name,
                 type: "input-checkbox",
                 hidden: false,
                 error: false,
@@ -200,6 +240,21 @@ async function register({
               ...videoFormOptions,
             }
           );
+          if (organizations.length === 0) {
+          registerVideoField(
+            {
+              type: "html",
+              html: "Füge noch in Organization einen Publisher hinzu",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+        }
           organizations.map((organisation) => {
             registerVideoField(
               {
@@ -674,7 +729,35 @@ async function register({
               ...videoFormOptions,
             }
           );
-
+          if (genreOptions.length === 0) {
+           registerVideoField(
+            {
+              label: "genre",
+              descriptionHTML: "Genre",
+              type: "html",
+              default: "",
+              hidden: false,
+              error: false,
+            },
+            {
+              type,
+              ...videoFormOptions,
+            }
+          );
+            registerVideoField(
+              {
+                type: "html",
+                html: "Füge noch in Genres einen Genre hinzu",
+                default: "",
+                hidden: false,
+                error: false,
+              },
+              {
+                type,
+                ...videoFormOptions,
+              }
+            );
+          } else {
           registerVideoField(
             {
               name: "videoInformation.showType.type",
@@ -692,7 +775,7 @@ async function register({
               ...videoFormOptions,
             }
           );
-
+        }
           registerVideoField(
             {
               name: "videoInformation.parts",

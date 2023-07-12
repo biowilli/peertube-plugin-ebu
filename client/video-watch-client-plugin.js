@@ -4,14 +4,41 @@ function register({ registerHook, peertubeHelpers }) {
     handler: ({ videojs, video, playlist }) => {
       console.log("soll sotiert werden:");
       console.log(video.pluginData);
-      var sortedJson = sortedData(video.pluginData);
+      var json = extractIds(video.pluginData)
+      var sortedJson = sortedData(json);
       unflattenJSON(sortedJson);
     },
   });
 }
 
+function extractIds(flatJson){
+    // Extract keys starting with prefixes and store them in a separate JSON
+    const contributorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "contributor");
+    const creatorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "creator"); //TODO sollten creator sein
+    const organizationJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "organization");
+  
+    console.log("contributorJson", contributorJson);
+    console.log("creatorJson", creatorJson);
+    console.log("organizationJson", organizationJson);
+    console.log("flatJson", flatJson);
+  
+    const creatorResult = extractValues(creatorJson);
+    const contributorResult = extractValues(contributorJson);
+    const organizationResult = extractValues(organizationJson);
+  
+    console.log('Creator Result:', creatorResult);
+    console.log('Contributor Result:', contributorResult);
+    console.log('Organization Result:', organizationResult);
+
+    flatJson.creator = creatorResult;
+    flatJson.contributor = contributorResult;
+    flatJson.organization = organizationResult;
+
+    return flatJson;
+}
+
 function sortedData(pluginData){
-  const order = ['title', 'creator', 'contributor', 'publisher', 'description', 'dates', 'videoInformation', 'rights', 'metadataProvider', 'technicalData'];
+  const order = ['title', 'creator', 'contributor', 'organization', 'description', 'dates', 'videoInformation', 'rights', 'metadataProvider', 'technicalData'];
   let sortedJson = {};
   order.forEach(key => {
     Object.keys(pluginData).forEach(dataKey => {
@@ -23,26 +50,9 @@ function sortedData(pluginData){
   return sortedJson;
 }
 
+
 function unflattenJSON(flatJson) {
   const nestedJson = {};
-  
-  // Extract keys starting with prefixes and store them in a separate JSON
-  const contributorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "contributor");
-  const creatorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "user"); //TODO sollten creator sein
-  const organizationJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "organization");
-
-  console.log("contributorJson", contributorJson);
-  console.log("creatorJson", creatorJson);
-  console.log("organizationJson", organizationJson);
-  console.log("flatJson", flatJson);
-
-  const creatorResult = extractValues(creatorJson);
-  const contributorResult = extractValues(contributorJson);
-  const organizationResult = extractValues(organizationJson);
-
-  console.log('User Result:', creatorResult);
-  console.log('Contributor Result:', contributorResult);
-  console.log('Organization Result:', organizationResult );
   
   for (const key in flatJson) {
 
@@ -67,6 +77,7 @@ function unflattenJSON(flatJson) {
     }
   }
   console.log("nestedJson",nestedJson);
+
   createHtml(nestedJson);
 }
 
