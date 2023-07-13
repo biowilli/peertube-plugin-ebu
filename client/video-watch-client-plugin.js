@@ -6,33 +6,112 @@ function register({ registerHook, peertubeHelpers }) {
       console.log(video.pluginData);
       var json = extractIds(video.pluginData)
       var sortedJson = sortedData(json);
-      unflattenJSON(sortedJson);
-    },
-  });
+      
+      //Title
+      createHeaderField("Title", 2);
+      createVideoInfo("Titlenotiz", sortedJson["title.note"]);
+      createVideoInfo("Title", sortedJson["title.title"]);
+      //createVideoInfo("Titlenotiz3", sortedJson["title.note"]);
+      createVideoInfo("descriptiveTitle", sortedJson["title.descriptiveTitle"]);
+      //createVideoInfo("Titlenotiz2", sortedJson["title.note"]);
+      createVideoInfo("discTitle", sortedJson["title.discTitle"]);
+      //createVideoInfo("Titlenotiz3", sortedJson["title.note"]);
+      createLine();
+
+      //Description
+      createHeaderField("Description", 2);
+      createVideoInfo("Subject", sortedJson["description.subject"]);
+      createVideoInfo("Text", sortedJson["description.text"]);
+      createVideoInfo("Tags", sortedJson["description.tags"]);
+      createLine();
+            
+      //creator
+      createList("Creator", sortedJson["creator"]);
+
+      //contributor
+      createList("Contributor", sortedJson["contributor"]);
+      //publisher
+      createList("Publisher", sortedJson["organization"]);
+      
+
+      
+      //Dates
+      createHeaderField("Dates", 2);
+      createVideoInfo("Date Digitalisied", sortedJson["dates.dateDigitalised"]);
+      createVideoInfo("Video Links", sortedJson["dates.videLinks"]);
+      createHeaderField("Issued", 3);
+      createVideoInfo("First Issued", sortedJson[ "dates.coverage.firstIssued"]);
+      createVideoInfo("Last Issued", sortedJson[ "dates.coverage.lastIssued"]);
+      
+      createHeaderField("Coverage", 3);
+      createVideoInfo("Date Recorded", sortedJson[ "dates.coverage.daterecorded"]);
+      createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation0"]);
+      createVideoInfo("Location", sortedJson[ "dates.coverage.recordingLocation1"]);
+
+      
+      createHeaderField("PublicationHistory", 3);
+      createVideoInfo("Date Recorded", sortedJson[ "dates.publicationHistory.firstPublicationChannel"]);
+      createVideoInfo("Time", sortedJson[ "dates.publicationHistory.firstPublicationTime"]);
+      createVideoInfo("Date", sortedJson[ "dates.publicationHistory.firstPublicationDate"]);
+      createVideoInfo("ReapeatChannel", sortedJson[ "dates.publicationHistory.repeatChannel"]);
+
+      
+      createHeaderField("ArchiveData", 3);
+      createVideoInfo("File Path", sortedJson["dates.archiveData.archiveFilePath"]);
+      createVideoInfo("Filesize", sortedJson["dates.archiveData.filesize"]);
+      createVideoInfo("Filename", sortedJson["dates.archiveData.filename"]);
+      createVideoInfo("ArchiveLocation", sortedJson["dates.archiveData.archiveLocation"]);
+      createLine();
+      
+      createHeaderField("Video Information", 2);
+      createVideoInfo("Category", sortedJson["dates.videoInformation.category"]);
+      createVideoInfo("Genre", sortedJson["videoInformation.genre"]);
+      createVideoInfo("Language", sortedJson["videoInformation.language"]);
+      createVideoInfo("Parts", sortedJson["videoInformation.parts"]);
+      createVideoInfo("relation", sortedJson["videoInformation.relation"]);
+      createVideoInfo("showType", sortedJson["videoInformation.showType.serie"]);
+      createVideoInfo("source", sortedJson["videoInformation.source"]);
+      createVideoInfo("targetGroup", sortedJson["videoInformation.targetGroup"]);
+      createVideoInfo("version", sortedJson["videoInformation.version"]);
+      createLine();
+      
+      createHeaderField("Rating", 3);
+      createVideoInfo("Notes", sortedJson["videoInformation.rating.notes"]);
+      createVideoInfo("ratingScaleMinValue", sortedJson["videoInformation.rating.ratingScaleMinValue"]);
+      createVideoInfo("ratingScaleMaxValue", sortedJson["videoInformation.rating.ratingScaleMaxValue"]);
+      createVideoInfo("ratingValue", sortedJson["videoInformation.rating.ratingScaleMaxValue"]);
+      createLine();
+      
+      createHeaderField("Rights", 2);
+      createHeaderField("Cobyright", 3);
+      createVideoInfo("rightId", sortedJson["rights.cobyright.rightId"]);
+      createVideoInfo("rightClearanceFlag", sortedJson["rights.cobyright.rightClearanceFlag"]);
+      createVideoInfo("explotationIssues", sortedJson["rights.cobyright.explotationIssues"]);
+      createVideoInfo("disclaimer", sortedJson["rights.cobyright.disclaimer"]);
+      createHeaderField("coverage", 4);
+      //createVideoInfo("coverage", sortedJson["rights.cobyright.coverage"]);
+
+      
++     createHeaderField("usageRights", 3);
+      createVideoInfo("rightId", sortedJson["rights.usageRights.rightId"]);
+      createVideoInfo("rightClearanceFlag", sortedJson["rights.usageRights.rightClearanceFlag"]);
+      createVideoInfo("explotationIssues", sortedJson["rights.usageRights.explotationIssues"]);
+      createVideoInfo("disclaimer", sortedJson["rights.usageRights.disclaimer"]);
+      createHeaderField("coverage", 4);
+      //createVideoInfo("coverage", sortedJson["rights.cobyright.coverage"]);
+      createLine();
+      
+    }});
 }
 
 function extractIds(flatJson){
     // Extract keys starting with prefixes and store them in a separate JSON
     const contributorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "contributor");
     const creatorJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "creator"); //TODO sollten creator sein
-    const organizationJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "organization");
-  
-    console.log("contributorJson", contributorJson);
-    console.log("creatorJson", creatorJson);
-    console.log("organizationJson", organizationJson);
-    console.log("flatJson", flatJson);
-  
-    const creatorResult = extractValues(creatorJson);
-    const contributorResult = extractValues(contributorJson);
-    const organizationResult = extractValues(organizationJson);
-  
-    console.log('Creator Result:', creatorResult);
-    console.log('Contributor Result:', contributorResult);
-    console.log('Organization Result:', organizationResult);
-
-    flatJson.creator = creatorResult;
-    flatJson.contributor = contributorResult;
-    flatJson.organization = organizationResult;
+    const organizationJson = extractKeysStartingWithPrefixesAndIsTrue(flatJson, "organization");  
+    flatJson.creator = extractValues(creatorJson);
+    flatJson.contributor = extractValues(contributorJson);
+    flatJson.organization = extractValues(organizationJson);
 
     return flatJson;
 }
@@ -48,37 +127,6 @@ function sortedData(pluginData){
     });
   });
   return sortedJson;
-}
-
-
-function unflattenJSON(flatJson) {
-  const nestedJson = {};
-  
-  for (const key in flatJson) {
-
-    if (key.includes(".")) {
-      const nestedKeys = key.split(".");
-      let currentNestedJson = nestedJson;
-
-      for (let i = 0; i < nestedKeys.length - 1; i++) {
-        const nestedKey = nestedKeys[i];
-
-        if (!currentNestedJson[nestedKey]) {
-          currentNestedJson[nestedKey] = {};
-        }
-
-        currentNestedJson = currentNestedJson[nestedKey];
-      }
-
-      currentNestedJson[nestedKeys[nestedKeys.length - 1]] =
-        flatJson[key] !== undefined ? flatJson[key] : "-";
-    } else {
-      nestedJson[key] = flatJson[key] !== undefined ? flatJson[key] : "-";
-    }
-  }
-  console.log("nestedJson",nestedJson);
-
-  createHtml(nestedJson);
 }
 
 function extractKeysStartingWithPrefixesAndIsTrue(flatJson, prefix) {
@@ -126,29 +174,26 @@ function extractName(key) {
   return nameParts[nameParts.length - 1];
 }
 
-function createHtml(data, level = 1) {
-  for (const key in data) {
-    const value = data[key];
-
-    // Erzeugen Sie die Überschrift basierend auf dem aktuellen Level
-    createHeaderField(key, level);
-
-    // Überprüfen, ob der Wert ein Objekt ist (nicht leer)
-    if (typeof value === 'object' && Object.keys(value).length > 0) {
-      // Wenn das Objekt das letzte Level ist, rufen Sie createVideoInfo auf
-      if (Object.values(value).every(v => typeof v === 'string')) {
-        for (const subKey in value) {
-          createVideoInfo(subKey, value[subKey]);
-        }
-      } else {
-        // Wenn das Objekt nicht das letzte Level ist, rufen Sie createHtml rekursiv auf
-        createHtml(value, level + 1);
-      }
-    } else {
-      // Wenn der Wert ein String ist, rufen Sie createVideoInfo auf
-      createVideoInfo(key, value);
-    }
-  }
+function createList(listname, array){
+  createHeaderField(listname, 2);
+  if (array.length === 0){
+    createVideoInfo(listname, "undefined");
+    createLine();
+  } else {
+  array.map((element) => {
+    createVideoInfo("Id", element.id);
+    createVideoInfo("Name", element.name);
+    createLine();
+  });
+}
+}
+      
+function createLine() {
+  const myLine = document.querySelector("my-video-attributes");
+  const newLine = document.createElement("div");
+  newLine.classList.add("line");
+  newLine.innerHTML = `<hr>`;
+  myLine.appendChild(newLine);
 }
 
 function createHeaderField(header, headerlevel) {
