@@ -10,3 +10,12 @@
   color: var(--greyForegroundColor);
   font-weight: 700;
 }
+
+.attribute-category,
+.attribute-licence,
+.attribute-language,
+.attribute-tags,
+.attribute-duration,
+.attribute-privacy{
+  display: none !important;
+}
