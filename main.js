@@ -1,8 +1,9 @@
+
 async function register({
   registerHook,
   storageManager,
-  registerSetting,
   getRouter,
+  videoCategoryManager,
 }) {
   var { initCreatorController }  = require("./controller/creator.js");
   var { initGenreController } = require("./controller/genre.js");
@@ -13,86 +14,7 @@ async function register({
   initGenreController(router, storageManager);
   initOrganizationController(router, storageManager);
 
-  var ebuData = [
-    "title",
-    "alternativeTitle",
-    "dateModified",
-    "publicationHistory",
-    "note",
-    "alternativeTitle2",
-    "creator",
-    "contributor",
-    "description",
-    "subject",
-    "duration",
-    "identifier",
-    "identifier2",
-    "publisher",
-    "date",
-    "dateIssued",
-    "dateDigitised",
-    "publicationHistory2",
-    "dateModified2",
-    "coverage",
-    "coverage2",
-    "entity",
-    "entity2",
-    "type",
-    "type2",
-    "type3",
-    "part",
-    "part2",
-    "part3",
-    "language",
-    "source",
-    "version",
-    "relation",
-    "rights",
-    "rightsCoverage",
-    "rightsCoverage2",
-    "rightsCoverage3",
-    "dateModified3",
-    "metadataProvider",
-    "format",
-    "format",
-    "format2",
-    "format3",
-    "format4",
-    "format5",
-    "format6",
-    "format7",
-    "format8",
-    "format9",
-    "format10",
-    "format11",
-    "format12",
-    "format13",
-    "language2",
-    "format14",
-    "format15",
-    "rating",
-  ];
-
-  registerSetting({
-    name: "organisation",
-    label: "Organization",
-    type: "input",
-    default: "false",
-    private: "false",
-  });
-
-  ebuData.forEach(function (item, index) {
-    var setting = {
-      name: item,
-      label: item,
-      type: "input-checkbox",
-      default: false,
-      private: false,
-    };
-
-    registerSetting(setting);
-  });
-
+  videoCategoryManager.deleteConstant();
   // Store data associated to this video
   registerHook({
     target: "action:api.video.updated",
